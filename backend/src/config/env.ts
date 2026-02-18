@@ -1,11 +1,11 @@
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 
 
 dotenv.config();
 
 export const ENV = {
     PORT: process.env.PORT,
-    DB_URL: process.env.DB_URL,
+    DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     FRONT_END_URL: process.env.FRONT_END_URL,
     CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
