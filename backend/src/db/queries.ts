@@ -95,8 +95,13 @@ export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
 
 
 export const deleteProduct = async (id: string) => {
+  const existingProduct = await getProductById(id);
+  if (!existingProduct) {
+    throw new Error("Produit non trouver");
+  }
   const [product] = await db.delete(products).where(eq(products.id, id)).returning();
   return product;
+ 
 };
 
 
@@ -108,6 +113,10 @@ export const createComment = async (data: NewComment) => {
 };
 
 export const deleteComment = async (id: string) => {
+  const existingComment = await getCommentsById(id);
+  if (!existingComment) {
+    throw new Error("Commentaire non trouver");
+  }
   const [comment] = await db.delete(comments).where(eq(comments.id, id)).returning();
   return comment;
 };
