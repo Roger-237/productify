@@ -22,17 +22,28 @@ export const getUserById = async (id: string) => {
 };
 
 export const updateUser = async (id: string, data: Partial<NewUser>) => {
-  const [user] = await db.update(users).set(data).where(eq(users.id, id)).returning();
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, ...mutable } = data;
+  const [user] = await db
+    .update(users)
+    .set({ ...mutable, updatedAt: new Date() })
+    .where(eq(users.id, id))
+    .returning();
   return user;
 };
 
+
 // upsert veut dire soit cree soit mise a jour
 export const upsertUser = async (data: NewUser) => {
-  const existingUser = await getUserById(data.id);
-
-  if (existingUser)
-    return updateUser(data.id, data);
-  return createUser(data);
+  const [user] = await db
+    .insert(users)
+    .values(data)
+    .onConflictDoUpdate({
+      target: users.id,
+      set: data,
+    })
+    .returning();
+  return user;
+ 
 };
 
 // product queries
@@ -74,9 +85,22 @@ export const getProductsByUserId = async (id: string) => {
 };
 
 export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
-  const [product] = await db.update(products).set(data).where(eq(products.id, id)).returning();
-  return product;
-};
+    const {
+    id: _id,
+    userId: _userId,
+    createdAt: _createdAt,
+    updatedAt: _updatedAt,
+    ...mutable
+  } = data;
+  const [product] = await db
+    .update(products)
+    .set(mutable)
+    .where(eq(products.id, id))
+   .returning();
+   return product;
+ };
+
+
 export const deleteProduct = async (id: string) => {
   const [product] = await db.delete(products).where(eq(products.id, id)).returning();
   return product;
