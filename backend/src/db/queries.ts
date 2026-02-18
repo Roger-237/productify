@@ -85,19 +85,12 @@ export const getProductsByUserId = async (id: string) => {
 };
 
 export const updateProduct = async (id: string, data: Partial<NewProduct>) => {
-    const {
-    id: _id,
-    userId: _userId,
-    createdAt: _createdAt,
-    updatedAt: _updatedAt,
-    ...mutable
-  } = data;
-  const [product] = await db
-    .update(products)
-    .set(mutable)
-    .where(eq(products.id, id))
-   .returning();
-   return product;
+  const existingProduct = await getProductById(id);
+  if (!existingProduct) {
+    throw new Error("Produit non trouver");
+  }
+  const [product] = await db.update(products).set(data).where(eq(products.id, id)).returning();
+  return product;
  };
 
 
