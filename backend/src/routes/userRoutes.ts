@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { syncUser } from "../controllers/userController";
+import { requireAuth } from "@clerk/express";
+
+const router = Router();
+
+
+// /api/users/sync -post sync the clerk user with the database (protected routes)
+
+router.post("/sync", requireAuth, syncUser);
+
+
+export default router;
