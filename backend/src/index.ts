@@ -10,17 +10,17 @@ import commentRoutes from "./routes/commentRoutes";
 
 const app = express();
 
-app.use(cors({ origin: ENV.FRONT_END_URL }));
-
-app.use(clerkMiddleware()) // auth objetcs will be attached to req objet 
+app.use(cors({ origin: ENV.FRONT_END_URL, credentials: true }));
+// Allow credentials to be sent with requests
 
 app.use(express.json()); // parse Json request bodies
+app.use(express.urlencoded({ extended: true })); // parses form data (Like html forms)
 
-app.use(express.urlencoded({ extended: true })) // parses form data (Like html forms).
+app.use(clerkMiddleware()); // auth objects will be attached to req object 
 
-app.use("/api/users", userRoutes)
-app.use("/api/products", productRoutes)
-app.use("/api/comments", commentRoutes)
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/comments", commentRoutes);
 
 
 

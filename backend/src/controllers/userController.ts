@@ -10,9 +10,9 @@ export async function syncUser(req: Request, res: Response) {
             return res.status(401).json({ error: "Utilisateur non trouvé" });
         }
 
-        const { email, name, iageurl } = req.body;
+        const { email, name, imageUrl } = req.body;
 
-        if (!email || !name || !iageurl) {
+        if (!email || !name || !imageUrl) {
             return res.status(400).json({ error: "Champs requis manquants" });
         }
 
@@ -20,7 +20,7 @@ export async function syncUser(req: Request, res: Response) {
             id: userId,
             email,
             name,
-            imageUrl: iageurl,
+            imageUrl,
         });
         
         return res.status(200).json({ user });
